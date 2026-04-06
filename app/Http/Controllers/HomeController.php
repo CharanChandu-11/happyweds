@@ -124,7 +124,13 @@ class HomeController extends Controller
         
         return view('pages.search.results', compact('results', 'validated'));
     }
-
+public function dashboard()
+    {
+        // In a real app, you would fetch user-specific data here
+        // like matches, messages, profile views, etc.
+        
+        return view('pages.dashboard');
+    }
     /**
      * Show registration page.
      */

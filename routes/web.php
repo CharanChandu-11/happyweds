@@ -56,8 +56,8 @@ Route::get('/privacy', [HomeController::class, 'privacy'])->name('privacy');
 Route::get('/terms', [HomeController::class, 'terms'])->name('terms');
 Route::get('/success-stories', [HomeController::class, 'successStories'])->name('success-stories');
 
-// Dashboard (Protected)
-Route::middleware(['auth'])->group(function () {
+// 1. Dashboard (Protected) - Add the middleware here!
+Route::middleware(['auth', \App\Http\Middleware\PreventBackHistory::class])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
@@ -66,26 +66,19 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/messages', [ProfileController::class, 'messages'])->name('messages');
 });
 
-
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function(){
-    
+// 2. Admin (Protected) - Add the middleware here too!
+Route::middleware(['auth', \App\Http\Middleware\PreventBackHistory::class])->prefix('admin')->name('admin.')->group(function(){
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
-    
     // USERS
     Route::resource('users', UserController::class);
-    
     // ROLES
     Route::resource('roles', RoleController::class);
-
     // PERMISSIONS
     Route::resource('permissions', PermissionController::class)->only(['index','create','store','destroy']);
-    
     // PROFILES
     Route::get('/profiles/export', [ProfileImportExportController::class, 'export'])->name('export');
     Route::post('/profiles/import', [ProfileImportExportController::class, 'import'])->name('import');
     Route::resource('profiles', ProfileController::class);
-    
-    
     // Upload images using Dropzone
     Route::post('/profiles/upload-image', [ProfileController::class, 'uploadImage'])->name('profiles.upload-image');
 
@@ -95,6 +88,4 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function(){
     Route::resource('castes', CasteController::class);
     Route::resource('gotras', GotraController::class);
     Route::resource('country-codes', CountryCodeController::class);
-    
-
 });

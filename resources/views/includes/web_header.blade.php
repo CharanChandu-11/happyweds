@@ -41,9 +41,16 @@
                             <i class="bi bi-person-circle me-1"></i> My Account
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="/dashboard"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
-                            <li><a class="dropdown-item" href="/profile/edit"><i class="bi bi-person me-2"></i>My Profile</a></li>
-                            <li><a class="dropdown-item" href="/matches"><i class="bi bi-heart me-2"></i>My Matches</a></li>
+                            
+                            {{-- Admin/User Dashboard Routing Logic --}}
+                            @if(auth()->user()->hasRole('Admin') || auth()->user()->hasRole('Super Admin'))
+                                <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}"><i class="bi bi-speedometer2 me-2"></i>Admin Dashboard</a></li>
+                            @else
+                                <li><a class="dropdown-item" href="/dashboard"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+                                <li><a class="dropdown-item" href="/profile/edit"><i class="bi bi-person me-2"></i>My Profile</a></li>
+                                <li><a class="dropdown-item" href="/matches"><i class="bi bi-heart me-2"></i>My Matches</a></li>
+                            @endif
+                            
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">
@@ -229,4 +236,4 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-</script>   
+</script>

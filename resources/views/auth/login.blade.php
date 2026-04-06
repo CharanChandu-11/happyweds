@@ -50,7 +50,7 @@
         width: 100%;
         height: 100%;
         fill: none;
-        stroke: #ff8eb3;
+        stroke: #ff8eb3; /* Lighter pink for the core line */
         stroke-width: 2.5;
     }
 
@@ -61,6 +61,7 @@
         100% { transform: translateY(-120vh) scale(1.5) rotate(20deg); opacity: 0; }
     }
 
+    /* Individual Heart Delays and Positions */
     .heart-1 { left: 15%; width: 40px; animation-delay: 0s; animation-duration: 15s; }
     .heart-2 { left: 80%; width: 60px; animation-delay: 3s; animation-duration: 12s; }
     .heart-3 { left: 35%; width: 30px; animation-delay: 6s; animation-duration: 14s; }
@@ -68,22 +69,23 @@
     .heart-5 { left: 25%; width: 45px; animation-delay: 11s; animation-duration: 13s; }
     .heart-6 { left: 60%; width: 35px; animation-delay: 14s; animation-duration: 15s; }
 
-    /* --- Center the Form --- */
+    /* --- Center the Form (Adjusted for Header) --- */
     .auth-wrapper {
         min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 100px 20px 40px; 
+        padding: 100px 20px 40px; /* Top padding clears the fixed navbar */
         position: relative;
         z-index: 10;
     }
 
     /* --- Solid NEON Card --- */
     .neon-card {
-        background: #0d0612; 
+        background: #0d0612; /* Solid dark background, NOT transparent */
         border: 2px solid #e75480;
         border-radius: 24px;
+        /* Outer glow and inner glow to create the neon effect */
         box-shadow: 0 0 20px rgba(231, 84, 128, 0.4), 
                     inset 0 0 15px rgba(231, 84, 128, 0.2),
                     0 25px 50px rgba(0, 0, 0, 0.8);
@@ -105,12 +107,13 @@
         font-weight: 700;
         margin-bottom: 8px;
         color: #ffffff;
+        /* Neon text glow */
         text-shadow: 0 0 10px rgba(231, 84, 128, 0.8), 0 0 20px rgba(231, 84, 128, 0.4);
     }
 
     .card-header-custom p {
         font-size: 0.9rem;
-        color: #fca9c5;
+        color: #fca9c5; /* Soft neon pink text */
         margin: 0;
     }
 
@@ -130,7 +133,7 @@
 
     .form-control-custom {
         width: 100%;
-        background: #170b1e; 
+        background: #170b1e; /* Solid dark input */
         border: 1px solid rgba(231, 84, 128, 0.4);
         color: #ffffff;
         border-radius: 12px;
@@ -144,35 +147,12 @@
         outline: none;
         background: #1c0e24;
         border-color: #ff7eb3;
+        /* Neon glow on focus */
         box-shadow: 0 0 12px rgba(231, 84, 128, 0.6), inset 0 0 5px rgba(231, 84, 128, 0.3);
     }
 
     .form-control-custom::placeholder {
         color: rgba(255, 255, 255, 0.3);
-    }
-
-    /* --- Checkbox Styling --- */
-    .form-check-input {
-        background-color: #170b1e;
-        border: 1px solid rgba(231, 84, 128, 0.4);
-        cursor: pointer;
-    }
-    
-    .form-check-input:checked {
-        background-color: #e75480;
-        border-color: #e75480;
-        box-shadow: 0 0 10px rgba(231, 84, 128, 0.6);
-    }
-
-    .form-check-input:focus {
-        border-color: #ff7eb3;
-        box-shadow: 0 0 0 0.25rem rgba(231, 84, 128, 0.25);
-    }
-
-    .form-check-label {
-        color: #e0d5df;
-        font-size: 0.85rem;
-        cursor: pointer;
     }
 
     .is-invalid {
@@ -187,6 +167,59 @@
         margin-top: 6px;
     }
 
+    /* --- Checkbox & Links (Login Specific) --- */
+    .flex-between {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .form-check-custom {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .form-check-input-custom {
+        appearance: none;
+        background-color: #170b1e;
+        border: 1px solid rgba(231, 84, 128, 0.4);
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.2s ease;
+    }
+
+    .form-check-input-custom:checked {
+        background-color: #e75480;
+        border-color: #ff7eb3;
+        box-shadow: 0 0 8px rgba(231, 84, 128, 0.6);
+    }
+
+    .form-check-input-custom:checked::after {
+        content: '✔';
+        position: absolute;
+        color: white;
+        font-size: 10px;
+        top: -1px;
+        left: 2px;
+    }
+
+    .forgot-link {
+        font-size: 0.85rem;
+        color: #ff7eb3;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .forgot-link:hover {
+        color: #ffffff;
+        text-shadow: 0 0 8px #ffffff, 0 0 15px #ff7eb3;
+    }
+
     /* --- Submit Button --- */
     .btn-submit {
         width: 100%;
@@ -198,7 +231,6 @@
         font-size: 1rem;
         font-weight: 600;
         letter-spacing: 0.5px;
-        margin-top: 10px;
         cursor: pointer;
         transition: all 0.3s ease;
         box-shadow: 0 0 15px rgba(231, 84, 128, 0.6);
@@ -211,18 +243,15 @@
         background: linear-gradient(135deg, #ff1493 0%, #e75480 100%);
     }
 
-    /* --- Auth Links --- */
-    .auth-links {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
+    /* --- Register Link --- */
+    .login-link {
+        text-align: center;
         margin-top: 25px;
         font-size: 0.9rem;
         color: rgba(255, 255, 255, 0.7);
     }
 
-    .auth-links a {
+    .login-link a {
         color: #ff7eb3;
         text-decoration: none;
         font-weight: 600;
@@ -230,7 +259,7 @@
         transition: all 0.3s;
     }
 
-    .auth-links a:hover {
+    .login-link a:hover {
         color: #ffffff;
         text-shadow: 0 0 8px #ffffff, 0 0 15px #ff7eb3;
     }
@@ -335,7 +364,7 @@
     <div class="neon-card">
         <div class="card-header-custom">
             <h2>Welcome Back</h2>
-            <p>Login to your account</p>
+            <p>Sign in to continue your journey</p>
         </div>
 
         <form method="POST" action="{{ route('login') }}">
@@ -357,24 +386,27 @@
                 @enderror
             </div>
 
-            <div class="form-group form-check mb-4">
-                <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                <label class="form-check-label" for="remember">
-                    {{ __('Remember Me') }}
-                </label>
+            <div class="flex-between">
+                <div class="form-check-custom">
+                    <input class="form-check-input-custom" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                    <label class="form-label-custom mb-0" for="remember" style="cursor: pointer;">
+                        {{ __('Remember Me') }}
+                    </label>
+                </div>
+
+                @if (Route::has('password.request'))
+                    <a class="forgot-link" href="{{ route('password.request') }}">
+                        {{ __('Forgot Password?') }}
+                    </a>
+                @endif
             </div>
 
             <button type="submit" class="btn-submit">
-                <i class="bi bi-box-arrow-in-right me-2"></i> {{ __('Login') }}
+                {{ __('Sign In') }}
             </button>
 
-            <div class="auth-links">
-                @if (Route::has('password.request'))
-                    <a href="{{ route('password.request') }}">{{ __('Forgot Your Password?') }}</a>
-                @endif
-                <div>
-                    Don't have an account? <a href="{{ route('register') }}">Create Profile</a>
-                </div>
+            <div class="login-link">
+                Don't have an account? <a href="{{ route('register') }}">Register Free</a>
             </div>
         </form>
     </div>
