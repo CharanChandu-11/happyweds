@@ -725,9 +725,7 @@
             </div>
 
             <button class="btn-apply-filters">Apply Filters</button>
-        </aside>
-
-        <main class="results-area">
+        </aside><main class="results-area">
             
             <div class="results-header">
                 <p class="results-info">Showing <strong style="color: var(--primary);">24</strong> of <strong style="color: var(--primary);">1,245</strong> matches</p>
@@ -755,9 +753,9 @@
             {{-- Assuming $profiles is passed from controller. Using a fallback array for visual testing if empty --}}
             @php
                 $displayProfiles = isset($profiles) && count($profiles) > 0 ? $profiles : [
-                    ['id'=>1, 'name'=>'Priya Sharma', 'age'=>26, 'height'=>"5'4\"", 'profession'=>'Software Engineer', 'education'=>'B.Tech, IIT Bombay', 'location'=>'Mumbai', 'religion'=>'Hindu', 'about'=>'Love traveling and coding. Looking for a caring partner.', 'verified'=>true, 'premium'=>true, 'online'=>true, 'image'=>'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=500&fit=crop'],
-                    ['id'=>2, 'name'=>'Arjun Patel', 'age'=>29, 'height'=>"5'10\"", 'profession'=>'Doctor', 'education'=>'MBBS, AIIMS', 'location'=>'Delhi', 'religion'=>'Hindu', 'about'=>'Passionate doctor who loves music.', 'verified'=>true, 'premium'=>false, 'online'=>false, 'image'=>'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop'],
-                    ['id'=>3, 'name'=>'Sneha Reddy', 'age'=>27, 'height'=>"5'3\"", 'profession'=>'CA', 'education'=>'B.Com', 'location'=>'Bangalore', 'religion'=>'Hindu', 'about'=>'Fun-loving CA.', 'verified'=>false, 'premium'=>false, 'online'=>true, 'image'=>'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=500&fit=crop']
+                    ['id'=>1, 'name'=>'Priya Sharma', 'age'=>26, 'height'=>"5'4\"", 'profession'=>'Software Engineer', 'education'=>'B.Tech, IIT Bombay', 'location'=>'Mumbai', 'religion'=>'Hindu', 'about'=>'Love traveling and coding. Looking for a caring partner.', 'verified'=>true, 'premium'=>true, 'online'=>true, 'is_shortlisted'=>false, 'image'=>'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=500&fit=crop'],
+                    ['id'=>2, 'name'=>'Arjun Patel', 'age'=>29, 'height'=>"5'10\"", 'profession'=>'Doctor', 'education'=>'MBBS, AIIMS', 'location'=>'Delhi', 'religion'=>'Hindu', 'about'=>'Passionate doctor who loves music.', 'verified'=>true, 'premium'=>false, 'online'=>false, 'is_shortlisted'=>true, 'image'=>'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop'],
+                    ['id'=>3, 'name'=>'Sneha Reddy', 'age'=>27, 'height'=>"5'3\"", 'profession'=>'CA', 'education'=>'B.Com', 'location'=>'Bangalore', 'religion'=>'Hindu', 'about'=>'Fun-loving CA.', 'verified'=>false, 'premium'=>false, 'online'=>true, 'is_shortlisted'=>false, 'image'=>'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=500&fit=crop']
                 ];
             @endphp
 
@@ -787,8 +785,13 @@
                         <div class="info-row"><i class="bi bi-geo-alt"></i> <span class="text-truncate">{{ $profile['location'] }}</span></div>
                         
                         <div class="card-actions">
-                            <button class="btn-action-sm btn-view-sm" onclick="window.location.href='/profile/{{$profile['id']}}'"><i class="bi bi-eye"></i> View</button>
-                            <button class="btn-action-sm btn-shortlist-sm" onclick="this.classList.toggle('active'); this.querySelector('i').classList.toggle('bi-star'); this.querySelector('i').classList.toggle('bi-star-fill');"><i class="bi bi-star"></i> Shortlist</button>
+                            <button class="btn-action-sm btn-view-sm" onclick="window.location.href='{{ route('profiles.show', $profile['id']) }}'">
+                                <i class="bi bi-eye"></i> View
+                            </button>
+                            
+                            <button class="btn-action-sm btn-shortlist-sm {{ ($profile['is_shortlisted'] ?? false) ? 'active' : '' }}" onclick="toggleShortlist({{ $profile['id'] }}, this)">
+                                <i class="bi {{ ($profile['is_shortlisted'] ?? false) ? 'bi-star-fill' : 'bi-star' }}"></i> Shortlist
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -829,8 +832,13 @@
                         <p class="text-muted small mb-4 line-clamp-2">{{ $profile['about'] }}</p>
 
                         <div class="card-actions mt-auto" style="max-width: 300px;">
-                            <button class="btn-action-sm btn-view-sm" onclick="window.location.href='/profile/{{$profile['id']}}'"><i class="bi bi-eye"></i> View Profile</button>
-                            <button class="btn-action-sm btn-shortlist-sm" onclick="this.classList.toggle('active'); this.querySelector('i').classList.toggle('bi-star'); this.querySelector('i').classList.toggle('bi-star-fill');"><i class="bi bi-star"></i> Shortlist</button>
+                            <button class="btn-action-sm btn-view-sm" onclick="window.location.href='{{ route('profiles.show', $profile['id']) }}'">
+                                <i class="bi bi-eye"></i> View Profile
+                            </button>
+                            
+                            <button class="btn-action-sm btn-shortlist-sm {{ ($profile['is_shortlisted'] ?? false) ? 'active' : '' }}" onclick="toggleShortlist({{ $profile['id'] }}, this)">
+                                <i class="bi {{ ($profile['is_shortlisted'] ?? false) ? 'bi-star-fill' : 'bi-star' }}"></i> Shortlist
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -931,7 +939,54 @@ document.addEventListener('DOMContentLoaded', function() {
             btnGrid.classList.remove('active');
         }
     }
+function toggleShortlist(profileId, button) {
+        // 1. Immediately toggle the UI for a snappy user experience
+        button.classList.toggle('active');
+        let icon = button.querySelector('i');
+        
+        if (icon.classList.contains('bi-star')) {
+            icon.classList.remove('bi-star');
+            icon.classList.add('bi-star-fill');
+        } else {
+            icon.classList.remove('bi-star-fill');
+            icon.classList.add('bi-star');
+        }
 
+        // 2. Send the actual request to your backend (requires the user to be logged in)
+        // Matches the Route::post('/{id}/shortlist') in your web.php
+        fetch(`/profiles/${profileId}/shortlist`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                // If they aren't logged in, redirect them to login
+                if(response.status === 401) {
+                    window.location.href = '/login';
+                    throw new Error('Unauthorized');
+                }
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Success! You can show a Toast notification here if you want
+            console.log('Shortlist status updated!');
+        })
+        .catch(error => {
+            if(error.message !== 'Unauthorized') {
+                // If something went wrong, revert the UI back to what it was
+                button.classList.toggle('active');
+                icon.classList.toggle('bi-star');
+                icon.classList.toggle('bi-star-fill');
+                console.error('There was a problem shortlisting this profile:', error);
+            }
+        });
+    }
     // Mobile Sidebar Toggle
     function toggleMobileSidebar() {
         const sidebar = document.getElementById('filtersSidebar');

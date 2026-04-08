@@ -35,43 +35,49 @@
                 </li>
                 
                 @auth
-                    <li class="nav-item dropdown ms-lg-3">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" 
-                           data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-person-circle me-1"></i> My Account
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="userDropdown">
-                            
-                            {{-- Admin/User Dashboard Routing Logic --}}
-                            @if(auth()->user()->hasRole('Admin') || auth()->user()->hasRole('Super Admin'))
-                                <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}"><i class="bi bi-speedometer2 me-2"></i>Admin Dashboard</a></li>
-                            @else
-                                <li><a class="dropdown-item" href="/dashboard"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
-                                <li><a class="dropdown-item" href="/profile/edit"><i class="bi bi-person me-2"></i>My Profile</a></li>
-                                <li><a class="dropdown-item" href="/matches"><i class="bi bi-heart me-2"></i>My Matches</a></li>
-                            @endif
-                            
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="dropdown-item text-danger"><i class="bi bi-box-arrow-right me-2"></i>Logout</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
-                @else
-                    <li class="nav-item ms-lg-3 mb-2 mb-lg-0 mt-3 mt-lg-0">
-                        <a class="nav-link nav-login text-center" href="{{ route('login') }}">
-                            Login
-                        </a>
-                    </li>
-                    <li class="nav-item ms-lg-2">
-                        <a class="btn btn-primary w-100" href="{{ route('register') }}">
-                            Register Free
-                        </a>
-                    </li>
-                @endauth
+    <li class="nav-item dropdown ms-lg-3">
+        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" 
+           data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-circle me-1"></i> My Account
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="userDropdown">
+            
+            {{-- Admin, Developer, and Operator Dashboard Routing Logic --}}
+            @if(auth()->user()->hasAnyRole(['Admin', 'Super Admin', 'Developer', 'Operator']) || auth()->user()->isAdmin())
+                <li>
+                    <a class="dropdown-item" href="{{ route('admin.dashboard') }}">
+                        <i class="bi bi-speedometer2 me-2"></i>Admin Dashboard
+                    </a>
+                </li>
+            @else
+                <li><a class="dropdown-item" href="/dashboard"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+                <li><a class="dropdown-item" href="/profile/edit"><i class="bi bi-person me-2"></i>My Profile</a></li>
+                <li><a class="dropdown-item" href="/matches"><i class="bi bi-heart me-2"></i>My Matches</a></li>
+            @endif
+            
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="dropdown-item text-danger">
+                        <i class="bi bi-box-arrow-right me-2"></i>Logout
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </li>
+@else
+    <li class="nav-item ms-lg-3 mb-2 mb-lg-0 mt-3 mt-lg-0">
+        <a class="nav-link nav-login text-center" href="{{ route('login') }}">
+            Login
+        </a>
+    </li>
+    <li class="nav-item ms-lg-2">
+        <a class="btn btn-primary w-100" href="{{ route('register') }}">
+            Register Free
+        </a>
+    </li>
+@endauth
             </ul>
         </div>
     </div>

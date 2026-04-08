@@ -589,12 +589,15 @@ class Profile extends Model
                 $filledFields++;
             }
         }
-        
-        $completion = ($filledFields / count($importantFields)) * 100;
-        $this->profile_completion = round($completion);
-        $this->saveQuietly(); // Use saveQuietly to avoid triggering events
-        
-        return $this->profile_completion;
+       $completion = ($filledFields / count($importantFields)) * 100;
+$this->profile_completion = round($completion);
+
+// Only save to the database if this profile has already been created
+if ($this->exists) {
+    $this->saveQuietly();
+}
+
+return $this->profile_completion;
     }
 
     public function updateLastLogin()

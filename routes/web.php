@@ -59,6 +59,11 @@ Route::get('/success-stories', [HomeController::class, 'successStories'])->name(
 // 1. Dashboard (Protected) - Add the middleware here!
 Route::middleware(['auth', \App\Http\Middleware\PreventBackHistory::class])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
+    Route::get('/messages/chat/{id}', function($id) {
+    // For now, returning the view directly for UI building.
+    // Later, you will route this to a MessageController to fetch real chat history.
+    return view('messages.chat', ['userId' => $id]);
+})->name('messages.chat')->middleware('auth');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/matches', [ProfileController::class, 'matches'])->name('matches');
@@ -81,7 +86,7 @@ Route::middleware(['auth', \App\Http\Middleware\PreventBackHistory::class])->pre
     Route::resource('profiles', ProfileController::class);
     // Upload images using Dropzone
     Route::post('/profiles/upload-image', [ProfileController::class, 'uploadImage'])->name('profiles.upload-image');
-
+    
     Route::resource('educations', EducationController::class);
     Route::resource('occupations', OccupationController::class);
     Route::resource('areas', AreaController::class);

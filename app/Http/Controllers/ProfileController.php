@@ -337,8 +337,13 @@ class ProfileController extends Controller
 
     // Show single profile
     // In your ProfileController.php
-    public function show(Profile $profile)
+    public function show($id)
     {
+        $profile = Profile::query()
+            ->where('id', $id)
+            ->orWhere('profile_id', $id)
+            ->firstOrFail();
+
         // Increment view count
         $profile->incrementViews();
         

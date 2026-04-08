@@ -168,14 +168,20 @@ class LoginController extends Controller
         file_put_contents($path, json_encode($data));
     }
     
-    protected function redirectTo()
-    {
-        $user = Auth::user();
-    
-        if ($user->roles()->exists()) {
-            return 'admin/dashboard';
-        }
-    
-        return '/dashboard';
+protected function redirectTo()
+{
+    $user = Auth::user();
+
+    // Check for ANY administrative role (Admin, Super Admin, Developer, Operator)
+    // Or check the custom database column 'role'
+    if (
+        $user->isAdmin() || 
+        $user->hasAnyRole(['Admin', 'Super Admin', 'Developer', 'Operator']) ||
+        in_array($user->role, ['admin', 'developer', 'operator'])
+    ) {
+        return '/admin/dashboard';
     }
+
+    return '/dashboard';
+}
 }
